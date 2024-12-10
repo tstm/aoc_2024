@@ -91,10 +91,10 @@ impl<'a> Iterator for Status<'a> {
         };
         if self.map[row][col] == OBSTRUCTION {
             self.pos.direction = self.pos.direction.turn();
-            return Some(self.pos.clone());
+        } else {
+            self.pos.row = row;
+            self.pos.col = col;
         }
-        self.pos.row = row;
-        self.pos.col = col;
         Some(self.pos.clone())
     }
 }
