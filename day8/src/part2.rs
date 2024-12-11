@@ -10,21 +10,11 @@ struct Antenna {
     col: usize,
 }
 
-fn resonances(
-    antennae: &Vec<Antenna>,
-    antenna_locations: &HashSet<(i32, i32)>,
-    height: usize,
-    width: usize,
-) -> HashSet<(i32, i32)> {
+fn resonances(antennae: &Vec<Antenna>, height: usize, width: usize) -> HashSet<(i32, i32)> {
     antennae
         .iter()
         .permutations(2)
         .flat_map(|v| get_resonances(v[0], v[1], height, width))
-        // Check they are within the map
-        // .filter(|(row, col)| {
-        //     row >= &0 && col >= &0 && row < &(height as i32) && col < &(width as i32)
-        // })
-        // .filter(|tuple| !antenna_locations.contains(&tuple))
         .collect()
 }
 
@@ -47,7 +37,6 @@ fn get_resonances(a: &Antenna, b: &Antenna, height: usize, width: usize) -> Vec<
 
 pub fn run(input: &str) -> Result<usize, String> {
     let mut antennae: HashMap<char, Vec<Antenna>> = HashMap::new();
-    let mut antenna_locations: HashSet<(i32, i32)> = HashSet::new();
     let height = input.lines().count();
     let width = input.lines().next().unwrap().len();
 
@@ -62,7 +51,6 @@ pub fn run(input: &str) -> Result<usize, String> {
                 }),
             };
             if let Some(antenna) = antenna {
-                antenna_locations.insert((row.clone() as i32, col.clone() as i32));
                 match antennae.get_mut(&freq) {
                     Some(list) => list.push(antenna),
                     None => {
@@ -76,7 +64,7 @@ pub fn run(input: &str) -> Result<usize, String> {
     }
     let resonances = antennae
         .iter()
-        .map(|(freq, antenna_list)| resonances(&antenna_list, &antenna_locations, height, width))
+        .map(|(freq, antenna_list)| resonances(&antenna_list, height, width))
         .reduce(|mut acc, r| {
             acc.extend(r);
             acc
