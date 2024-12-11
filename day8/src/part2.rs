@@ -64,7 +64,7 @@ pub fn run(input: &str) -> Result<usize, String> {
     }
     let resonances = antennae
         .iter()
-        .map(|(freq, antenna_list)| resonances(&antenna_list, height, width))
+        .map(|(_, antenna_list)| resonances(&antenna_list, height, width))
         .reduce(|mut acc, r| {
             acc.extend(r);
             acc
